@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: algions_ecommerce_api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - DATABASE_URL=postgresql://ecommerce_user:secure_production_password_2026@db:5432/ecommerce_db
+      - ADMIN_API_KEY=algions-secret-key-2026
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - ecommerce_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  db:
+    image: postgres:16-alpine
+    container_name: algions_ecommerce_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ecommerce_user
+      POSTGRES_PASSWORD: secure_production_password_2026
+      POSTGRES_DB: ecommerce_db
+    volumes:
+      - ecommerce_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - ecommerce_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecommerce_user -d ecommerce_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+networks:
+  ecommerce_net:
+    driver: bridge
+
+volumes:
+  ecommerce_pgdata:
+    driver: local

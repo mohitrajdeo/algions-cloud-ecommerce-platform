@@ -1,0 +1,26 @@
+{
+  "name": "algions-cloud-ecommerce-platform",
+  "version": "1.0.0",
+  "description": "Enterprise-grade Product & Order API with idempotency control, health probes, Docker orchestration, and CI/CD pipelines",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test tests/api.test.js"
+  },
+  "keywords": [
+    "devops",
+    "ecommerce",
+    "docker",
+    "ci-cd",
+    "idempotency",
+    "observability"
+  ],
+  "author": "Mohit Raj Deo",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.1",
+    "pg": "^8.13.1"
+  }
+}
