@@ -1,4 +1,4 @@
-﻿# Windows PowerShell Backup Script
+# Windows PowerShell Backup Script
 $backupDir = Join-Path $PSScriptRoot "..\backups"
 if (-not (Test-Path $backupDir)) { New-Item -ItemType Directory -Path $backupDir | Out-Null }
 

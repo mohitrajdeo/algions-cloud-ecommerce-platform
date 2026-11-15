@@ -1,4 +1,4 @@
-﻿param([string]$File)
+param([string]$File)
 
 if (-not $File) {
     $latest = Get-ChildItem (Join-Path $PSScriptRoot "..\backups\*.sql") | Sort-Object LastWriteTime -Descending | Select-Object -First 1

@@ -142,3 +142,20 @@ test('7. Missing Idempotency-Key returns 400 Bad Request', async () => {
   assert.equal(res.status, 400);
   assert.match(res.body.error, /Idempotency-Key/i);
 });
+
+test('8. Prometheus Telemetry (/metrics) returns exposition format', async () => {
+  const res = await makeRequest({ method: 'GET', path: '/metrics' });
+  assert.equal(res.status, 200);
+  assert.ok(typeof res.body === 'string');
+  assert.match(res.body, /http_requests_total/);
+  assert.match(res.body, /ecommerce_orders_created_total/);
+});
+
+test('9. Interactive Operations Console (/dashboard) returns HTML', async () => {
+  const res = await makeRequest({ method: 'GET', path: '/dashboard' });
+  assert.equal(res.status, 200);
+  assert.ok(typeof res.body === 'string');
+  assert.match(res.body, /ALGIONS AI LABS/);
+  assert.match(res.body, /DevOps Control Center/);
+});
+

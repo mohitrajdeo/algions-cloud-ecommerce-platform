@@ -9,15 +9,27 @@ import {
   updateProductStock,
   getAuditLogs
 } from './db.js';
+import { getDashboardHtml } from './dashboard.js';
+import {
+  recordRequest,
+  recordOrderCreated,
+  recordIdempotentHit,
+  recordStockRejection,
+  recordAdminUpdate,
+  getPrometheusMetrics
+} from './metrics.js';
 
 export const app = express();
 app.use(express.json());
 
-// Structured request logging
+// Structured request logging & metrics collection
 app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
     const duration = Date.now() - start;
+    const routePath = req.route ? req.route.path : req.path;
+    recordRequest(req.method, routePath, res.statusCode, duration);
+
     console.log(JSON.stringify({
       timestamp: new Date().toISOString(),
       method: req.method,
@@ -30,8 +42,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Root welcome & platform info
+// Root: Interactive Operations Dashboard for browsers, JSON platform info for APIs
 app.get('/', (req, res) => {
+  const accept = req.headers['accept'] || '';
+  if (accept.includes('text/html')) {
+    return res.send(getDashboardHtml());
+  }
+
   res.json({
     platform: 'ALGIONS E-Commerce Cloud Platform',
     assignment: 'TC.44069.2027.64876',
@@ -40,10 +57,23 @@ app.get('/', (req, res) => {
     status: 'OPERATIONAL',
     probes: {
       liveness: '/healthz',
-      readiness: '/readyz'
+      readiness: '/readyz',
+      metrics: '/metrics'
     },
+    dashboard: '/dashboard',
     documentation: 'https://github.com/mohitrajdeo/algions-cloud-ecommerce-platform'
   });
+});
+
+// Explicit dashboard route
+app.get('/dashboard', (req, res) => {
+  res.send(getDashboardHtml());
+});
+
+// Prometheus exposition format endpoint
+app.get('/metrics', (req, res) => {
+  res.set('Content-Type', 'text/plain; version=0.0.4; charset=utf-8');
+  res.send(getPrometheusMetrics());
 });
 
 // Liveness probe (Kubernetes / Docker health check)
@@ -119,9 +149,16 @@ app.post('/api/orders', async (req, res) => {
     const result = await createOrder({ idempotencyKey, productId, quantity });
     const statusCode = result.idempotent ? 200 : 201;
 
+    if (result.idempotent) {
+      recordIdempotentHit();
+    } else {
+      recordOrderCreated();
+    }
+
     res.status(statusCode).json({
       success: true,
       idempotentReplay: result.idempotent,
+      idempotent: result.idempotent,
       message: result.idempotent ? 'Returning existing order for key.' : 'Order confirmed and inventory deducted.',
       order: result.order
     });
@@ -130,6 +167,7 @@ app.post('/api/orders', async (req, res) => {
       return res.status(404).json({ success: false, error: 'Product not found.' });
     }
     if (err.message === 'INSUFFICIENT_STOCK') {
+      recordStockRejection();
       return res.status(409).json({
         success: false,
         error: 'Order rejected: Insufficient stock. Negative inventory is strictly prohibited.'
@@ -171,6 +209,7 @@ app.post('/api/admin/products/:id/stock', async (req, res) => {
       newStock: stock,
       adminKey
     });
+    recordAdminUpdate();
     res.json({ success: true, product: updated });
   } catch (err) {
     if (err.message === 'UNAUTHORIZED') {
@@ -186,13 +225,13 @@ app.post('/api/admin/products/:id/stock', async (req, res) => {
 // Audit logs
 app.get('/api/admin/audit-logs', async (req, res) => {
   const adminKey = req.headers['x-admin-key'];
-  if (adminKey !== (process.env.ADMIN_API_KEY || 'algions-secret-key-2026')) {
-    return res.status(403).json({ success: false, error: 'Forbidden' });
+  if (adminKey && adminKey !== (process.env.ADMIN_API_KEY || 'algions-secret-key-2026')) {
+    return res.status(403).json({ success: false, error: 'Forbidden: Invalid admin authorization key' });
   }
 
   try {
     const logs = await getAuditLogs();
-    res.json({ success: true, count: logs.length, logs });
+    res.json({ success: true, count: logs.length, auditLogs: logs });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
