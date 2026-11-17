@@ -10,16 +10,21 @@ export function getDashboardHtml() {
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: rgba(17, 24, 39, 0.7);
-      --border: rgba(255, 255, 255, 0.08);
-      --cyan: #00f0ff;
-      --green: #10b981;
-      --amber: #f59e0b;
-      --red: #ef4444;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --green: #059669;
+      --green-light: #ecfdf5;
+      --amber: #d97706;
+      --amber-light: #fffbeb;
+      --red: #dc2626;
+      --red-light: #fef2f2;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,11 +33,8 @@ export function getDashboardHtml() {
       color: var(--text);
       font-family: var(--font-sans);
       min-height: 100vh;
-      padding: 24px;
+      padding: 32px 20px;
       line-height: 1.5;
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(0, 240, 255, 0.08) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
     }
     .container { max-width: 1200px; margin: 0 auto; }
     header {
@@ -48,6 +50,7 @@ export function getDashboardHtml() {
     .logo-area h1 {
       font-size: 22px;
       font-weight: 700;
+      color: #0f172a;
       letter-spacing: -0.5px;
       display: flex;
       align-items: center;
@@ -56,14 +59,14 @@ export function getDashboardHtml() {
     .logo-badge {
       font-family: var(--font-mono);
       font-size: 11px;
-      background: rgba(0, 240, 255, 0.12);
-      color: var(--cyan);
-      border: 1px solid rgba(0, 240, 255, 0.3);
-      padding: 2px 8px;
-      rounded: 6px;
-      border-radius: 4px;
+      background: #eff6ff;
+      color: var(--primary);
+      border: 1px solid #bfdbfe;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
     }
-    .author-meta { font-size: 13px; color: var(--text-muted); font-family: var(--font-mono); }
+    .author-meta { font-size: 13px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 4px; }
     .status-pill {
       display: inline-flex;
       align-items: center;
@@ -72,16 +75,17 @@ export function getDashboardHtml() {
       border-radius: 9999px;
       font-family: var(--font-mono);
       font-size: 12px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: var(--green-light);
+      border: 1px solid #a7f3d0;
       color: var(--green);
+      font-weight: 600;
     }
     .pulse-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: var(--green);
-      box-shadow: 0 0 10px var(--green);
+      box-shadow: 0 0 8px var(--green);
       animation: pulse 2s infinite;
     }
     @keyframes pulse {
@@ -93,11 +97,11 @@ export function getDashboardHtml() {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 20px;
-      backdrop-filter: blur(12px);
+      padding: 24px;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
     }
     .card-title {
-      font-size: 13px;
+      font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: var(--text-muted);
@@ -106,8 +110,9 @@ export function getDashboardHtml() {
       justify-content: space-between;
       align-items: center;
       font-family: var(--font-mono);
+      font-weight: 700;
     }
-    .stat-val { font-size: 26px; font-weight: 700; color: #fff; font-family: var(--font-mono); }
+    .stat-val { font-size: 26px; font-weight: 700; color: var(--text); font-family: var(--font-mono); }
     .btn {
       display: inline-flex;
       align-items: center;
@@ -118,43 +123,46 @@ export function getDashboardHtml() {
       font-weight: 600;
       font-family: var(--font-mono);
       cursor: pointer;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-dark);
+      background: #ffffff;
       color: var(--text);
       transition: all 0.2s;
     }
-    .btn:hover { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.3); }
-    .btn-primary { background: rgba(0, 240, 255, 0.15); border-color: rgba(0, 240, 255, 0.4); color: var(--cyan); }
-    .btn-primary:hover { background: rgba(0, 240, 255, 0.25); border-color: var(--cyan); }
-    .btn-danger { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: var(--red); }
-    .btn-danger:hover { background: rgba(239, 68, 68, 0.25); border-color: var(--red); }
+    .btn:hover { background: #f1f5f9; border-color: #94a3b8; }
+    .btn-primary { background: var(--primary); border-color: var(--primary); color: #ffffff; }
+    .btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+    .btn-danger { background: var(--red); border-color: var(--red); color: #ffffff; }
+    .btn-danger:hover { background: #b91c1c; border-color: #b91c1c; }
     .btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
     pre {
-      background: #05070d;
-      border: 1px solid var(--border);
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
       border-radius: 8px;
-      padding: 14px;
+      padding: 18px;
       font-family: var(--font-mono);
-      font-size: 12px;
-      color: #38bdf8;
-      max-height: 280px;
-      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #0f172a;
       white-space: pre-wrap;
       word-break: break-word;
+      min-height: 160px;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
     }
     table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
-    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
-    th { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
+    th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    th { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; background: #f8fafc; font-weight: 700; }
+    tr:hover td { background: #f8fafc; }
     .badge {
       display: inline-block;
-      padding: 2px 6px;
+      padding: 3px 8px;
       border-radius: 4px;
       font-size: 11px;
       font-family: var(--font-mono);
+      font-weight: 600;
     }
-    .badge-green { background: rgba(16, 185, 129, 0.15); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-amber { background: rgba(245, 158, 11, 0.15); color: var(--amber); border: 1px solid rgba(245, 158, 11, 0.3); }
-    .nav-links a { color: var(--cyan); text-decoration: none; margin-right: 16px; font-family: var(--font-mono); font-size: 12px; }
+    .badge-green { background: var(--green-light); color: var(--green); border: 1px solid #a7f3d0; }
+    .badge-amber { background: var(--amber-light); color: var(--amber); border: 1px solid #fde68a; }
+    .nav-links a { color: var(--primary); text-decoration: none; margin-right: 16px; font-family: var(--font-mono); font-size: 12px; font-weight: 600; }
     .nav-links a:hover { text-decoration: underline; }
   </style>
 </head>
@@ -165,7 +173,11 @@ export function getDashboardHtml() {
         <h1>ALGIONS AI LABS <span class="logo-badge">DevOps & Cloud Assessment</span></h1>
         <div class="author-meta">Candidate: Mohit Raj Deo (12323329) | Project: Cloud Deployment & CI/CD – E-Commerce Platform</div>
       </div>
-      <div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <a href="/docs" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; border: 1px solid #bfdbfe; background: #eff6ff; color: var(--primary); font-family: var(--font-mono); font-size: 12px; font-weight: 700; text-decoration: none; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+          <span>📖 Docs & Source Code</span>
+          <span style="font-size: 11px;">↗</span>
+        </a>
         <div class="status-pill" id="live-status-pill">
           <span class="pulse-dot"></span>
           <span id="live-status-text">SYSTEM HEALTHY (200 OK)</span>
@@ -177,7 +189,7 @@ export function getDashboardHtml() {
       <div class="card">
         <div class="card-title">Liveness Probe (/healthz)</div>
         <div class="stat-val" id="val-health">200 OK</div>
-        <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Uptime: <span id="val-uptime" style="color:#fff; font-family:var(--font-mono);">--</span></p>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Uptime: <span id="val-uptime" style="color:var(--text); font-family:var(--font-mono); font-weight:600;">--</span></p>
         <div class="btn-group">
           <button class="btn btn-primary" onclick="testHealthz()">Ping /healthz</button>
         </div>
@@ -186,7 +198,7 @@ export function getDashboardHtml() {
       <div class="card">
         <div class="card-title">Readiness Probe (/readyz)</div>
         <div class="stat-val" id="val-ready">200 READY</div>
-        <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">DB Engine: <span id="val-db" style="color:#fff; font-family:var(--font-mono);">PostgreSQL 16</span></p>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">DB Engine: <span id="val-db" style="color:var(--text); font-family:var(--font-mono); font-weight:600;">PostgreSQL 16</span></p>
         <div class="btn-group">
           <button class="btn btn-primary" onclick="testReadyz()">Ping /readyz</button>
         </div>
@@ -194,7 +206,7 @@ export function getDashboardHtml() {
 
       <div class="card">
         <div class="card-title">Prometheus Telemetry</div>
-        <div class="stat-val" style="color:var(--cyan);">METRICS ACTIVE</div>
+        <div class="stat-val" style="color:var(--primary);">METRICS ACTIVE</div>
         <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Exposition format on /metrics</p>
         <div class="btn-group">
           <a href="/metrics" target="_blank" class="btn">View /metrics Stream</a>
@@ -206,7 +218,7 @@ export function getDashboardHtml() {
     <div class="card" style="margin-bottom: 24px;">
       <div class="card-title">
         <span>Acceptance Test Execution Suite (Interactive Compliance Drills)</span>
-        <span style="color: var(--cyan);">One-Click Demonstration</span>
+        <span style="color: var(--primary); font-weight:600;">One-Click Demonstration</span>
       </div>
       <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
         Use the controls below to verify business logic, idempotency deduplication, negative stock locking, and administrative audit logging live.
@@ -298,9 +310,9 @@ export function getDashboardHtml() {
         data.products.forEach(p => {
           const row = document.createElement('tr');
           row.innerHTML = \`
-            <td style="font-family:var(--font-mono); color:var(--cyan);">\${p.id}</td>
+            <td style="font-family:var(--font-mono); color:var(--primary); font-weight:600;">\${p.id}</td>
             <td><strong>\${p.name}</strong></td>
-            <td style="font-family:var(--font-mono); color:var(--text-muted);">\${p.sku}</td>
+            <td style="font-family:var(--font-mono); color:var(--text-muted);">\${p.sku || p.category || 'N/A'}</td>
             <td style="font-family:var(--font-mono); font-weight:bold;">$\${Number(p.price).toFixed(2)}</td>
             <td style="font-family:var(--font-mono); font-size:14px; font-weight:bold; color:\${p.stock > 5 ? 'var(--green)' : 'var(--red)'};">\${p.stock}</td>
             <td><span class="badge \${p.stock > 0 ? 'badge-green' : 'badge-amber'}">\${p.stock > 0 ? 'IN STOCK' : 'OUT OF STOCK'}</span></td>

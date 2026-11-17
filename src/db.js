@@ -5,11 +5,11 @@ const { Pool } = pg;
 // In-memory state store for zero-dependency local runs and edge testing
 const memoryStore = {
   products: [
-    { id: 'prod_001', name: 'High-Performance Cloud Compute Node', price: 120.00, stock: 15, category: 'Compute' },
-    { id: 'prod_002', name: 'Managed Kubernetes Cluster Slot', price: 250.00, stock: 8, category: 'Orchestration' },
-    { id: 'prod_003', name: 'Distributed Redis Cache (16GB)', price: 45.00, stock: 25, category: 'Storage' },
-    { id: 'prod_004', name: 'Edge CDN Global Bandwidth (1TB)', price: 30.00, stock: 50, category: 'Networking' },
-    { id: 'prod_005', name: 'Isolated Hardware Security Module', price: 499.00, stock: 3, category: 'Security' }
+    { id: 'prod_001', sku: 'SKU-COMP-001', name: 'High-Performance Cloud Compute Node', price: 120.00, stock: 15, category: 'Compute' },
+    { id: 'prod_002', sku: 'SKU-ORCH-002', name: 'Managed Kubernetes Cluster Slot', price: 250.00, stock: 8, category: 'Orchestration' },
+    { id: 'prod_003', sku: 'SKU-STOR-003', name: 'Distributed Redis Cache (16GB)', price: 45.00, stock: 25, category: 'Storage' },
+    { id: 'prod_004', sku: 'SKU-NETW-004', name: 'Edge CDN Global Bandwidth (1TB)', price: 30.00, stock: 50, category: 'Networking' },
+    { id: 'prod_005', sku: 'SKU-SECU-005', name: 'Isolated Hardware Security Module', price: 499.00, stock: 3, category: 'Security' }
   ],
   orders: new Map(),
   idempotencyKeys: new Map(),

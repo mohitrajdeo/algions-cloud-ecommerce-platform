@@ -10,6 +10,7 @@ import {
   getAuditLogs
 } from './db.js';
 import { getDashboardHtml } from './dashboard.js';
+import { getDocsHtml } from './docs.js';
 import {
   recordRequest,
   recordOrderCreated,
@@ -61,6 +62,7 @@ app.get('/', (req, res) => {
       metrics: '/metrics'
     },
     dashboard: '/dashboard',
+    docs: '/docs',
     documentation: 'https://github.com/mohitrajdeo/algions-cloud-ecommerce-platform'
   });
 });
@@ -68,6 +70,11 @@ app.get('/', (req, res) => {
 // Explicit dashboard route
 app.get('/dashboard', (req, res) => {
   res.send(getDashboardHtml());
+});
+
+// Interactive API Documentation & Code Inspector
+app.get('/docs', (req, res) => {
+  res.send(getDocsHtml());
 });
 
 // Prometheus exposition format endpoint
